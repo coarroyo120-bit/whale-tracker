@@ -1,0 +1,62 @@
+name: Update whale data and website
+
+on:
+  schedule:
+    - cron: "23 11 * * *"   # every day at 11:23 UTC (7:23 a.m. Eastern in summer)
+  workflow_dispatch:         # adds a "Run workflow" button in the Actions tab
+  push:
+    branches: [main]
+
+permissions:
+  contents: write   # to commit new data files
+  pages: write      # to publish the website
+  id-token: write
+
+concurrency:
+  group: update-site
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Download latest 13F filings from SEC EDGAR
+        env:
+          SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}
+        run: python src/fetch_13f.py
+
+      - name: Build website
+        run: python src/build_site.py
+
+      - name: Save new data to the repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then
+            echo "No new filings."
+          else
+            git commit -m "Update 13F data"
+            git push
+          fi
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - id: deploy
+        uses: actions/deploy-pages@v4
