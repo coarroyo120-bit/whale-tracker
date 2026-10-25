@@ -1,0 +1,21 @@
+fund,manager,cik,sec_name,period,filing_date,accession,amendment_count,raw_file
+Berkshire Hathaway,Warren Buffett / Greg Abel,1067983,BERKSHIRE HATHAWAY INC,2026-06-30,2026-08-14,0001193125-26-352200,0,data/raw/1067983_2026-06-30.csv
+Berkshire Hathaway,Warren Buffett / Greg Abel,1067983,BERKSHIRE HATHAWAY INC,2026-03-31,2026-05-15,0001193125-26-226661,0,data/raw/1067983_2026-03-31.csv
+Pershing Square,Bill Ackman,1336528,"Pershing Square Capital Management, L.P.",2026-03-31,2026-05-15,0001172661-26-002336,0,data/raw/1336528_2026-03-31.csv
+Pershing Square,Bill Ackman,1336528,"Pershing Square Capital Management, L.P.",2025-12-31,2026-02-17,0001172661-26-001091,0,data/raw/1336528_2025-12-31.csv
+Duquesne Family Office,Stanley Druckenmiller,1536411,Duquesne Family Office LLC,2026-06-30,2026-08-14,0001536411-26-000006,0,data/raw/1536411_2026-06-30.csv
+Duquesne Family Office,Stanley Druckenmiller,1536411,Duquesne Family Office LLC,2026-03-31,2026-05-15,0001536411-26-000004,0,data/raw/1536411_2026-03-31.csv
+Appaloosa,David Tepper,1656456,Appaloosa LP,2026-06-30,2026-08-14,0001656456-26-000003,0,data/raw/1656456_2026-06-30.csv
+Appaloosa,David Tepper,1656456,Appaloosa LP,2026-03-31,2026-05-15,0001656456-26-000002,0,data/raw/1656456_2026-03-31.csv
+Baupost Group,Seth Klarman,1061768,BAUPOST GROUP LLC/MA,2026-06-30,2026-08-13,0001061768-26-000010,0,data/raw/1061768_2026-06-30.csv
+Baupost Group,Seth Klarman,1061768,BAUPOST GROUP LLC/MA,2026-03-31,2026-05-14,0001061768-26-000007,0,data/raw/1061768_2026-03-31.csv
+Third Point,Dan Loeb,1040273,Third Point LLC,2026-06-30,2026-08-14,0001040273-26-000003,0,data/raw/1040273_2026-06-30.csv
+Third Point,Dan Loeb,1040273,Third Point LLC,2026-03-31,2026-05-15,0001040273-26-000002,0,data/raw/1040273_2026-03-31.csv
+Greenlight Capital,David Einhorn,1079114,GREENLIGHT CAPITAL INC,2023-12-31,2024-02-14,0001172661-24-001512,0,data/raw/1079114_2023-12-31.csv
+Greenlight Capital,David Einhorn,1079114,GREENLIGHT CAPITAL INC,2023-09-30,2023-11-14,0001172661-23-004012,0,data/raw/1079114_2023-09-30.csv
+Icahn Enterprises (Carl Icahn),Carl Icahn,921669,ICAHN CARL C,2026-06-30,2026-08-14,0001539497-26-002243,0,data/raw/921669_2026-06-30.csv
+Icahn Enterprises (Carl Icahn),Carl Icahn,921669,ICAHN CARL C,2026-03-31,2026-05-15,0001539497-26-001469,0,data/raw/921669_2026-03-31.csv
+Soros Fund Management,George Soros,1029160,SOROS FUND MANAGEMENT LLC,2026-06-30,2026-08-14,0000902664-26-003507,0,data/raw/1029160_2026-06-30.csv
+Soros Fund Management,George Soros,1029160,SOROS FUND MANAGEMENT LLC,2026-03-31,2026-05-15,0000902664-26-002529,0,data/raw/1029160_2026-03-31.csv
+Bridgewater Associates,Ray Dalio (founder),1350694,"Bridgewater Associates, LP",2026-06-30,2026-08-14,0001350694-26-000003,0,data/raw/1350694_2026-06-30.csv
+Bridgewater Associates,Ray Dalio (founder),1350694,"Bridgewater Associates, LP",2026-03-31,2026-05-15,0001350694-26-000002,0,data/raw/1350694_2026-03-31.csv
