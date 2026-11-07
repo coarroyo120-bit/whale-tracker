@@ -1,7 +1,8 @@
 """Quarter-over-quarter position changes for one fund.
 
-Written from a spec-first prompt: Carlos defined the rules and tests below,
-and the code was generated against them and checked by the test suite.
+Spec for this comparison: written by Carlos (the rules below).
+Code and tests: written by Claude (AI) from this spec, and checked by the
+test suite.
 
 Check the logic with:
     python -m unittest tests/test_compare.py -v

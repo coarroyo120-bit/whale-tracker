@@ -9,7 +9,6 @@ button switches between them.
 
 import html
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
@@ -50,6 +49,22 @@ def load_holdings(path):
     df = pd.read_csv(ROOT / path, dtype={"cusip": str, "put_call": str})
     df["put_call"] = df["put_call"].fillna("")
     return df
+
+
+def looks_like_thousands(df):
+    """True if a filing's dollar values look 1,000 times too small.
+
+    The SEC has required whole dollars since Jan 3, 2023, but some filers still
+    report in thousands. Real stocks trade for dollars a share, so a median value
+    per share under $1 for plain stock lines is a strong sign of thousands.
+    The numbers are shown as filed; this only adds a warning.
+    """
+    stock = df[(df["put_call"] == "") & (df["shares"] > 0)]
+    if "share_type" in stock.columns:
+        stock = stock[stock["share_type"] == "SH"]
+    if stock.empty:
+        return False
+    return (stock["value_usd"] / stock["shares"]).median() < 1
 
 
 def top_holdings(df, n=10):
@@ -107,7 +122,7 @@ def holdings_table(top):
     )
 
 
-def fund_section(fund_rows):
+def fund_section(fund_rows, newest_period):
     fund_rows = fund_rows.sort_values("period")
     prev_info, curr_info = fund_rows.iloc[0], fund_rows.iloc[1]
     prev, curr = load_holdings(prev_info["raw_file"]), load_holdings(curr_info["raw_file"])
@@ -117,9 +132,24 @@ def fund_section(fund_rows):
     except NotImplementedError:
         moves_html = f'<p class="note">{t("Moves coming soon.", "Movimientos muy pronto.")}</p>'
 
-    warning = ""
+    warnings = []
+    if curr_info["period"] < newest_period:
+        warnings.append(t(
+            f'Older filing: the newest one available covers the quarter ending {curr_info["period"]}. '
+            f'Most funds here are on {newest_period}.',
+            f'Reporte antiguo: el más reciente disponible es del trimestre al {curr_info["period"]}. '
+            f'La mayoría de los fondos aquí están en {newest_period}.'))
+    if looks_like_thousands(curr):
+        warnings.append(t(
+            "Dollar values in this filing look 1,000 times too small. The fund may have reported in "
+            "thousands instead of whole dollars. Share counts and move labels are not affected.",
+            "Los montos en dólares de este reporte parecen 1,000 veces más pequeños. Es posible que el "
+            "fondo los reportara en miles en vez de dólares. Las cantidades de acciones y las etiquetas "
+            "de movimiento no se ven afectadas."))
     if curr_info["amendment_count"] > 0:
-        warning = (f'<p class="warn">{t("This fund amended its filing. Figures use the original.", "Este fondo enmendó su reporte. Las cifras usan el original.")}</p>')
+        warnings.append(t("This fund amended its filing. Figures use the original.",
+                          "Este fondo enmendó su reporte. Las cifras usan el original."))
+    warning = "".join(f'<p class="warn">{w}</p>' for w in warnings)
 
     return f"""
 <section class="fund">
@@ -222,17 +252,20 @@ body.es [lang="en"], body:not(.es) [lang="es"] {{ display:none; }}
 
 def main():
     filings = pd.read_csv(FILINGS_CSV)
+    newest_period = filings["period"].max()
     sections = []
+    shown_filing_dates = []
     for fund, rows in filings.groupby("fund", sort=False):
         if len(rows) < 2:
             continue
-        sections.append(fund_section(rows))
+        sections.append(fund_section(rows, newest_period))
+        shown_filing_dates.append(rows.sort_values("period").iloc[1]["filing_date"])
 
     page = PAGE.format(
         lede=t("What well-known investors bought and sold last quarter, from their public SEC 13F filings.",
                "Lo que compraron y vendieron inversionistas conocidos el último trimestre, según sus reportes 13F públicos ante la SEC."),
-        updated_label=t("Data checked:", "Datos revisados:"),
-        updated=datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        updated_label=t("Newest filing on this page:", "Reporte más reciente en esta página:"),
+        updated=max(shown_filing_dates) if shown_filing_dates else "–",
         sections="\n".join(sections),
         disclaimer=t("For education only. Not investment advice. 13F filings show long U.S. positions only and can be up to 45 days old when filed.",
                      "Solo con fines educativos. No es asesoría de inversión. Los reportes 13F muestran solo posiciones largas en EE. UU. y pueden tener hasta 45 días de antigüedad."),
